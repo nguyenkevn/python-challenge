@@ -13,6 +13,7 @@ with open(budget_data, 'r') as csvfile:
     csvreader=csv.reader(csvfile, delimiter=',')
     header=next(csvreader)
     for row in csvreader:
+
 #Defining list
         months.append(row[0])
         profitloss.append(int(row[1]))
@@ -27,23 +28,37 @@ print(f"Total Months: {totalmonth}")
 
 #Calculate the net total amount of "Profit/Losses" over the entire period
 totalnet=sum(profitloss)
-print(f"Total: {totalnet}")
+print(f"Total: ${totalnet}")
+
+#Calculate the difference between each month
+
+difference=[]
+change=0
+previousrow=0
+for row in profitloss:
+    #Not equal credit: https://www.edureka.co/community/33869/how-to-use-not-equal-operator-in-python#:~:text=You%20can%20use%20%22!%3D,are%20not%20equal%2C%20otherwise%20false%20.
+    if len(difference) != 0:
+        change= row-previousrow
+    previousrow=row
+    difference.append(change)
 
 #Calculate the average of the changes in "Profit/Losses" over the entire period
-average=round(totalnet/len(profitloss))
-print(f"Average Change: {average}")
+#Rounding credit: https://www.programiz.com/python-programming/methods/buil
+average=round((sum(difference)/((len(difference))-1)),2)
+print(f"Average Change: ${average}")
 
 #Calculate the greatest increase in profits (date and amount) over the entire period
-maxprofit=max(profitloss)
-maxindexprofit=profitloss.index(maxprofit)
+maxprofit=max(difference)
+maxindexprofit=difference.index(maxprofit)
 maxprofitdate=months[maxindexprofit]
-print(f"Greatest Increase in Profits: {maxprofitdate} ({maxprofit})")
+print(f"Greatest Increase in Profits: {maxprofitdate} (${maxprofit})")
 
 #Calculate the greatest decrease in losses (date and amount) over the entire period
-maxloss=min(profitloss)
-maxindexloss=profitloss.index(maxloss)
+maxloss=min(difference)
+maxindexloss=difference.index(maxloss)
 maxlossdate=months[maxindexloss]
-print(f"Greatest Decrease in Profits: {maxlossdate} ({maxloss})")
+print(f"Greatest Decrease in Profits: {maxlossdate} (${maxloss})")
 
 #Final script should print the analysis to the terminal AND export a text file with the results
-    
+# output_path = os.path.join("..", "output", "new.csv")
+
